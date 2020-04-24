@@ -531,7 +531,7 @@ namespace DataEnvironment {
             //  [Met] - at meterological Station, Height of measurement is usually 10m above ground
             //  LocalWindSpeed = Windspeed [Met] * (Wind Boundary LayerThickness [Met]/Height [Met])**Wind Exponent[Met] &
             //                     * (Height above ground / Site Wind Boundary Layer Thickness) ** Site Wind Exponent
-            LocalWindSpeed = WindSpeed * WeatherFileWindModCoeff * std::pow(Z / SiteWindBLHeight, SiteWindExp);
+            LocalWindSpeed = (WindSpeed * std::exp(9.6 * 0.4 * ((Z / 10) - 1))) / (std::exp(9.6 * 0.4 * ((10 / 10) - 1)));
         }
 
         return LocalWindSpeed;
@@ -638,7 +638,7 @@ namespace DataEnvironment {
         if (SiteWindExp == 0.0) {
             LocalWindSpeed = WindSpeed;
         } else {
-            Real64 const fac(WindSpeed * WeatherFileWindModCoeff * std::pow(SiteWindBLHeight, -SiteWindExp));
+            Real64 const fac(WindSpeed / (std::exp(9.6 * 0.4 * ((10 / 10) - 1))));
             Real64 Z; // Centroid value
             for (int i = 1; i <= NumItems; ++i) {
                 Z = Heights(i);
@@ -648,7 +648,7 @@ namespace DataEnvironment {
                     //  [Met] - at meterological Station, Height of measurement is usually 10m above ground
                     //  LocalWindSpeed = Windspeed [Met] * (Wind Boundary LayerThickness [Met]/Height [Met])**Wind Exponent[Met] &
                     //                     * (Height above ground / Site Wind Boundary Layer Thickness) ** Site Wind Exponent
-                    LocalWindSpeed(i) = fac * std::pow(Z, SiteWindExp);
+                    LocalWindSpeed(i) = fac * std::exp(9.6 * 0.4 * ((Z / 10) - 1));
                 }
             }
         }
