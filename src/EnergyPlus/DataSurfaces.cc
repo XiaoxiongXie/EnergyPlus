@@ -1207,7 +1207,7 @@ namespace DataSurfaces {
         using DataEnvironment::SiteWindExp;
         using DataEnvironment::WeatherFileWindModCoeff;
 
-        Real64 const fac(DataEnvironment::WindSpeed * WeatherFileWindModCoeff * std::pow(SiteWindBLHeight, -SiteWindExp));
+        Real64 const fac(DataEnvironment::WindSpeed / (std::exp(9.6 * 0.4 * ((10 / 10) - 1))));
         for (auto &surface : Surface) {
             surface.SetWindSpeedAt(fac);
         }
